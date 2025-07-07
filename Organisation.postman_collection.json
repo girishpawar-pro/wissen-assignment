@@ -1,0 +1,265 @@
+{
+	"info": {
+		"_postman_id": "e069393c-4723-4334-a4af-de8aaa585435",
+		"name": "Organisation",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32345293"
+	},
+	"item": [
+		{
+			"name": "Department",
+			"item": [
+				{
+					"name": "Get All Departments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8087/api/v1/dept",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8087",
+							"path": [
+								"api",
+								"v1",
+								"dept"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change HOD",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8087/api/v1/dept/1/change-hod/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8087",
+							"path": [
+								"api",
+								"v1",
+								"dept",
+								"1",
+								"change-hod",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create New Dept",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"deptName\": \"HR\",\n    \"hodEmp\": {\n        \"empId\": 6\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8087/api/v1/dept",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8087",
+							"path": [
+								"api",
+								"v1",
+								"dept"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Employee",
+			"item": [
+				{
+					"name": "Get All Employees",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8087/api/v1/emp/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8087",
+							"path": [
+								"api",
+								"v1",
+								"emp",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Employee",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Deo\",\n    \"gender\": \"FEMALE\",\n    \"dob\": \"10-Jan-1999\",\n    \"designation\": \"MANAGER\",\n    \"department\": {\n        \"deptName\": \"IT\"\n    },\n    \"manager\": {\n        \"empId\": 2\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8087/api/v1/emp",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8087",
+							"path": [
+								"api",
+								"v1",
+								"emp"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Move Emp to Other Dept",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8087/api/v1/emp/6/move-to/1/under/5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8087",
+							"path": [
+								"api",
+								"v1",
+								"emp",
+								"6",
+								"move-to",
+								"1",
+								"under",
+								"5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Fields",
+			"item": [
+				{
+					"name": "Get All Designations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8087/api/v1/fields/designation",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8087",
+							"path": [
+								"api",
+								"v1",
+								"fields",
+								"designation"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Genders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8087/api/v1/fields/gender",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8087",
+							"path": [
+								"api",
+								"v1",
+								"fields",
+								"gender"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Departments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8087/api/v1/fields/gender",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8087",
+							"path": [
+								"api",
+								"v1",
+								"fields",
+								"gender"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

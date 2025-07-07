@@ -1,6 +1,5 @@
 package com.assignment.organisation.config;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,15 +41,15 @@ public class AppStartup implements CommandLineRunner {
 		System.out.println("Department Data Saved Successfully");
 		
 		List<Employee> employees = Arrays.asList(
-			new Employee(null, "Girish", null, "Pawar", Gender.MALE , "14-Mar-1991", Designation.CEO, null, null),
-			new Employee(null, "Pooja", null, "Pawar", Gender.FEMALE , "10-Dec-1991", Designation.MANAGER, 
-					new Employee(1l, "Girish", null, "Pawar", Gender.MALE , "14-Mar-1991", Designation.CEO, null, null),
+			new Employee(null, "Sam", null, "Oswald", Gender.MALE , "01-Jan-2020", Designation.CEO, null, null),
+			new Employee(null, "Penny", null, "Nunt", Gender.FEMALE , "02-Jan-2020", Designation.MANAGER, 
+					new Employee(1l, "Sam", null, "Oswald", Gender.MALE , "01-Jan-2020", Designation.CEO, null, null),
 					new Department(1l, DepartmentName.IT, null)),
-			new Employee(null, "Kavita", null, "Pawar", Gender.FEMALE , "04-Nov-1964", Designation.MANAGER, 
-					new Employee(1l, "Girish", null, "Pawar", Gender.MALE , "14-Mar-1991", Designation.CEO, null, null),
+			new Employee(null, "Kate", null, "Putin", Gender.FEMALE , "03-Jan-2020", Designation.MANAGER, 
+					new Employee(1l, "Sam", null, "Oswald", Gender.MALE , "01-Jan-2020", Designation.CEO, null, null),
 					new Department(2l, DepartmentName.ENGINEERING, null)),
-			new Employee(null, "Gary", null, "Paul", Gender.MALE , "13-Mar-1991", Designation.MANAGER, 
-					new Employee(1l, "Girish", null, "Pawar", Gender.MALE , "14-Mar-1991", Designation.CEO, null, null),
+			new Employee(null, "Gary", null, "Paul", Gender.MALE , "04-Jan-2020", Designation.MANAGER, 
+					new Employee(1l, "Sam", null, "Oswald", Gender.MALE , "01-Jan-2020", Designation.CEO, null, null),
 					new Department(3l, DepartmentName.ADMIN, null))
 		);
 		
@@ -67,7 +66,7 @@ public class AppStartup implements CommandLineRunner {
 		
 		System.out.println(addHODEmp.toString());
 		departmentRepository.saveAll(addHODEmp);
-		System.out.println("Department2 Data Saved Successfully");
+		System.out.println("Data Saved Successfully");
 				
 	}
 
