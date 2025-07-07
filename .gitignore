@@ -15,3 +15,7 @@ buildNumber.properties
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+organisation/target
+organisation-fe/package-lock.json
+organisation-fe/node_modules
