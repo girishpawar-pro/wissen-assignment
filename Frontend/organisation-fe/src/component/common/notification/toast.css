@@ -1,0 +1,62 @@
+.toast-notification {
+    background-color: white;
+    opacity: 0.9;
+    position: absolute;
+    top: 2rem;
+    left: 31rem;
+    z-index: 99;
+    animation: fadein 0.5s, 0.5s 5.5s;
+}
+
+.toast-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 7rem;
+    min-height: 4rem;
+    min-width: 27rem;
+    max-width: 33rem;
+    border: 2px solid gray;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.toast-head {
+    padding: 0.5rem;
+    border-bottom: 1px solid black;
+    font-size: x-large;
+    font-weight: 700;
+}
+
+.toast-body {
+    padding: 1rem 0.5rem 1rem 0.5rem;
+    font-size: medium;
+}
+
+.error {
+    color: red;
+    border: 2px solid red;
+}
+
+.warning {
+    color: orange;
+    border: 2px solid orange;
+}
+
+.info {
+    color: blue;
+    border: 2px solid blue;
+}
+
+.success {
+    color: greenyellow;
+    border: 2px solid greenyellow;
+}
+
+@keyframes fadein {
+  from {top: 0; opacity: 0;}
+  to {top: 2rem; opacity: 1;}
+}
+
+@keyframes fadeout {
+  from {top: 2rem; opacity: 1;}
+  to {top: 0; opacity: 0;}
+}
