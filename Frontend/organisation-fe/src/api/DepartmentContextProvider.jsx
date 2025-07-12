@@ -1,6 +1,7 @@
-import { createContext, useCallback, useEffect } from "react";
+import { createContext, useCallback, useContext, useEffect } from "react";
 import { organisationEndpoints } from "./Endpoints";
 import { useState } from "react";
+import { ToastContext } from "./ToastContextProvider";
 
 export const DepartmentContext = createContext({
     departments:[],
@@ -9,6 +10,7 @@ export const DepartmentContext = createContext({
 });
 
 const DepartmentContextProvider = ({children}) => {
+    const {popToast} = useContext(ToastContext);
     const [departments, setDepartments] = useState({
         allDepartments: [],
         tableHeaders: [],
@@ -16,9 +18,19 @@ const DepartmentContextProvider = ({children}) => {
 
     const getAllDepartments = useCallback(()=>{
         fetch(organisationEndpoints.getDepartments)
-        .then(res => res.json())
-        .then(data => setDepartments({...departments, allDepartments: data, tableHeaders: Object.keys(data[0])}))
-        .catch(err => console.log(err))
+        .then((res) => {
+            if(res.status != 500){
+                return res.json();
+            }
+            throw Error("Error Occurred: " + res.statusText);       
+        })
+        .then((data) => {
+            setDepartments({...departments, allDepartments: data, tableHeaders: Object.keys(data[0])})
+        })
+        .catch((error) => {
+            console.log(error);
+            popToast({show:true, details: {severity: "error", heading: "Error", message: error.message}});
+        });
     })
 
     useEffect(()=>{

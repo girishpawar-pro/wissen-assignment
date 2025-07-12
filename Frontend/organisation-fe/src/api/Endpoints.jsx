@@ -22,3 +22,21 @@ export const organisationEndpoints = {
     changeHOD: pathParams =>  `${domain}/dept/${pathParams.deptId}/change-hod/${pathParams.newHodEmp}`,
     moveEmployee: pathParams =>  `${domain}/emp/${pathParams.empId}/move-to/${pathParams.newDepartment}/under/${pathParams.newManager}`,
 }
+
+export const parseReadableStream = async (reader) => {
+    let receivedText = '';
+    while (true) {
+        const { done, value } = await reader.read();
+        if (done) {
+            console.log("Stream finished.");
+            break;
+        }
+        receivedText += new TextDecoder().decode(value);
+    }
+    console.log("Full received text:", receivedText);
+    return receivedText;
+}
+
+export const ignoreEmpObjKeys = [
+    "firstName", "lastName", "middleName"
+];

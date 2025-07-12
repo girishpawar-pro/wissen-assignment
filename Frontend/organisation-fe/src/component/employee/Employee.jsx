@@ -1,37 +1,30 @@
-import React, { useContext, useEffect, useState } from 'react'
-
+import { useContext, useEffect, useState } from 'react'
 
 import "./employee.css";
 import { Table } from '../common/table/Table';
 import { Button } from '../common/button/Button';
 import { organisationEndpoints } from '../../api/Endpoints';
+import { ToastContext } from '../../api/ToastContextProvider';
+import { EmployeeContext } from '../../api/EmployeeContextProvider';
 
 const Employee = ({goTo}) => {
-    const [employees, setEmployees] = useState([]);
-    const [tableHeader, setTableHeader] = useState([]);
+    const {employees, tableHeader} = useContext(EmployeeContext)
   
-    useEffect(()=>{
-      const getTableData = async () =>{
-          await fetch(organisationEndpoints.getEmployees)
-              .then(res => res.json())
-              .then((data) => {
-                setEmployees(data)
-                setTableHeader(Object.keys(data[0]));
-              });
-      }
-      getTableData();
-    }, []);
-
     const actionBtnHandler = (empObj) => {
       goTo("moveEmp", empObj);
     }
 
+    const handleAddEmployee = () => {
+      // popToast({show:true, details: {heading: "Success", severity: "success", message: "Testing toast!"}})
+      goTo("addNewEmp", {});
+    }
+
   return (
-    <>
-        <div className={"df-row jc-sb"}>
+    <div className='employee-details'>
+        <div className={"df-row jc-sb aln-cnt"}>
             <h3>All Employees</h3>
             <Button 
-                clickHandler={(e)=>{e.preventDefault();goTo("addNewEmp", {});}}
+                clickHandler={handleAddEmployee}
                 buttonLabel={"Add Employee"}
                 inlineStyle={{padding: '5px'}}
                 />
@@ -43,7 +36,7 @@ const Employee = ({goTo}) => {
           actionHandler={actionBtnHandler}
           actionName={"Move Employee"}
           tableFor={"empId"}/>
-    </>
+    </div>
   )
 }
 

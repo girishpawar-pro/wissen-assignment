@@ -2,10 +2,6 @@ body {
   font-family: monospace;
 }
 
-.pw-full {
-  width: 100%;
-}
-
 .grid {
   display: grid;
 }
@@ -77,7 +73,7 @@ body {
 
 .inpt-box {
   height: 25px;
-  width: fit-content;
+  width: 51%;
 }
 
 .inpt-box-d {
@@ -93,4 +89,8 @@ body {
 .sel-opt {
   height: 33px;
   width: 54%;
+}
+
+.aln-cnt {
+  align-items: center;
 }

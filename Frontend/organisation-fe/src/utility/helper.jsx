@@ -12,3 +12,10 @@ export const moveEmpPageManagerFields = [
 export const deptFields = [
     "deptId", "deptName", "hodEmp"
 ]
+
+export const isEmpty = (val) => {
+    if(val != null && val != undefined && val != "" ) {
+        return false;
+    }
+    return true;
+}

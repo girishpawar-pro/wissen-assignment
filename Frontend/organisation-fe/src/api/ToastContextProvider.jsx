@@ -25,6 +25,9 @@ const ToastContextProvider = ({children}) =>{
 
     const handlePopToast = (toastObj) => {
         setToast(toastObj);
+        setTimeout(()=>{
+            setToast(initialToastContext);
+        },4000);
     }
 
     const toastCtxValue = {

@@ -1,24 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { Button } from '../common/button/Button';
 import { intiPatch, organisationEndpoints } from '../../api/Endpoints';
 import { moveEmpPageFields } from '../../utility/helper';
+import { EmployeeContext } from '../../api/EmployeeContextProvider';
+import { DepartmentContext } from '../../api/DepartmentContextProvider';
+import { ToastContext } from '../../api/ToastContextProvider';
 
 const MoveEmployee = ({goTo, rowDetails}) => {
+    const { employees } = useContext(EmployeeContext);
+    const { departments, refresh } = useContext(DepartmentContext);
+    const { popToast } = useContext(ToastContext);
+
     const [inputs, setInputs] = useState({});
-    const [employees, setEmployees] = useState([]);
-    const [departments, setDepartments] = useState([]);
     const [deptEmps, setDeptEmps] = useState([]);
+    const [isDisabled, setIsDisabled] = useState(true);
 
     useEffect(()=>{
-        const getDropDownData = async () =>{
-            await fetch(organisationEndpoints.getDepartments)
-                .then(res => res.json())
-                .then(data => setDepartments(data.filter(department => department?.deptId != rowDetails?.department?.deptId)));
-            await fetch(organisationEndpoints.getEmployees)
-                .then(res => res.json())
-                .then(data => setEmployees(data));
-        }
-        getDropDownData();
+        // const getDropDownData = () => {
+        //     // data.filter(department => department?.deptId != rowDetails?.department?.deptId);
+        // }
+        // getDropDownData();
         let temp = {}
         moveEmpPageFields.map(field => {
             temp[field] = rowDetails[field]
@@ -35,12 +36,25 @@ const MoveEmployee = ({goTo, rowDetails}) => {
     },[]);
 
     const handleOnSubmit = (e) => {
+        e.preventDefault();
         let patchInit = intiPatch;
         let pathParams = {...inputs};
 
         fetch(organisationEndpoints.moveEmployee(pathParams), patchInit)
-            .then(res => res.json())
-            .then((data) => {console.log("Employee moved to new department Successfully."); goTo("", {});});
+        .then((res) => {
+            if(res.status != 500) {
+                return res.json();
+            }
+            throw Error("Error Occurred: " + res.statusText);
+        })
+        .then((data) => {
+            console.log("Employee moved to new department Successfully.");
+            popToast({show:true, details: {severity: "success", heading: "Success", message: "Employee moved to new department Successfully."}});
+        })
+        .catch((error) => {
+            console.log("Error occurred while moving employee to another department: ", error);
+            popToast({show:true, details: {severity: "error", heading: "Error", message: `Error occurred while moving employee to another department. ${error.message}`}});
+        });
     }
 
     const handleOnChange = (e) => {
@@ -57,6 +71,30 @@ const MoveEmployee = ({goTo, rowDetails}) => {
                 return false;
             });
             setDeptEmps(deptEmps);
+        }
+        validateForm(name, val);
+    }
+
+    const handleBackBtnMoveEmp = (e) => {
+        e.preventDefault();
+        refresh();
+        goTo("", {});
+    }
+
+    const validateForm = (currentFieldName, currentFieldValue) => {
+        const formFields = {...inputs};
+        const keys = Object.keys(formFields);
+        let enableSubmitBtn = keys.every((key) => {
+            if(key === currentFieldName) {
+                return !isEmpty(currentFieldValue);
+            } else {
+                return !isEmpty(formFields[key]);
+            }
+        })
+        if(enableSubmitBtn) {
+            setIsDisabled(false);
+        } else {
+            setIsDisabled(true);
         }
     }
 
@@ -124,13 +162,14 @@ const MoveEmployee = ({goTo, rowDetails}) => {
                 <label className="df-row jc-sb mt-20 ">
                     <Button 
                         buttonLabel={'Back'} 
-                        clickHandler={(e)=>{e.preventDefault();goTo("", {});}}
+                        clickHandler={(e)=>handleBackBtnMoveEmp(e)}
                         inlineStyle={{height: '2rem', width: '10.5rem'}}
                         ></Button>
                     <Button 
                         buttonLabel={'Submit'} 
                         clickHandler={(e)=>handleOnSubmit(e)}
-                        inlineStyle={{height: '2rem', width: '14rem'}}
+                        inlineStyle={{height: '2rem', width: '13.3rem'}}
+                        isDisabled={isDisabled}
                         ></Button>
                 </label>
             </form>

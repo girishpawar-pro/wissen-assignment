@@ -1,36 +1,19 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useState } from 'react'
 import { Button } from '../common/button/Button';
 import { intiPost, organisationEndpoints } from '../../api/Endpoints';
+import { EmployeeContext } from '../../api/EmployeeContextProvider';
+import { DepartmentContext } from '../../api/DepartmentContextProvider';
+import { StaticDataContext } from '../../api/StaticDataContextProvider';
+import { ToastContext } from '../../api/ToastContextProvider';
 
 export const AddEmployee = ({goTo}) => {
+    const {employees, refresh} = useContext(EmployeeContext);
+    const {departments} = useContext(DepartmentContext);
+    const {designations, genders} = useContext(StaticDataContext);
+    const {popToast} = useContext(ToastContext);
+    
     const [inputs, setInputs] = useState({});
-    const [departments, setDepartments] = useState([]);
-    const [designations, setDesignations] = useState([]);
-    const [genders, setGenders] = useState([]);
-    const [employees, setEmployees] = useState([]);
     const [assignedManagerList, setAssignedManagerList] = useState([]);
-
-    useEffect(()=>{
-        const getDropDownData = async () =>{
-            await fetch(organisationEndpoints.getGenders)
-                .then(res => res.json())
-                .then(data => setGenders(data))
-                .catch(err => console.log(err));
-            await fetch(organisationEndpoints.getDesignations)
-                .then(res => res.json())
-                .then(data => setDesignations(data))
-                .catch(err => console.log(err));
-            await fetch(organisationEndpoints.getDepartments)
-                .then(res => res.json())
-                .then(data => setDepartments(data))
-                .catch(err => console.log(err));
-            await fetch(organisationEndpoints.getEmployees)
-                .then(res => res.json())
-                .then(data => setEmployees(data))
-                .catch(err => console.log(err));
-        }
-        getDropDownData();
-    },[])
 
     const handleOnSubmit = (e) => {
         e.preventDefault();
@@ -38,15 +21,28 @@ export const AddEmployee = ({goTo}) => {
         let postInti = intiPost;
         let payload = {...inputs};
 
-        payload.department = {deptId: parseInt(payload.department), deptName: departments.filter(department => department.deptId == parseInt(payload.department))[0].deptName};
+        payload.department = {deptId: parseInt(payload.department), 
+            deptName: departments.filter(department => department.deptId == parseInt(payload.department))[0].deptName};
         payload.manager = {empId: parseInt(payload.manager)};
         postInti.body = JSON.stringify(payload);
 
         console.log("pre api call check: ", postInti);
 
         fetch(organisationEndpoints.addEmployee, postInti)
-            .then(res => res.json())
-            .then(data => {console.log("Employee Created Successfully: ", data);goTo("");});
+            .then((res) => {
+                if(res.status != 500) {
+                    return res.json();
+                }
+                throw Error("Error Occurred: " + res.statusText);
+            })
+            .then((data) => {
+                console.log("Employee Created Successfully: ", data);
+                popToast({show:true, details: {severity: "success", heading: "Success", message: "Employee record created successfully."}});
+            })
+            .catch((error) => {
+                console.log("Error occurred while creating Employee: ", error);
+                popToast({show:true, details: {severity: "error", heading: "Error", message: error.message}});
+            });
     }
 
     const handleOnChange = (e) => {
@@ -64,6 +60,12 @@ export const AddEmployee = ({goTo}) => {
             });
             setAssignedManagerList(managers);
         }
+    }
+
+    const handleBackAddEmp = (e) => {
+        e.preventDefault();
+        refresh();
+        goTo("", {});
     }
 
   return (
@@ -137,12 +139,12 @@ export const AddEmployee = ({goTo}) => {
             <label className="df-row jc-sb mt-20 ">
                 <Button 
                     buttonLabel={'Back'} 
-                    clickHandler={(e)=>{e.preventDefault();goTo("", {});}}
+                    clickHandler={(e)=>handleBackAddEmp(e)}
                     inlineStyle={{height: '2rem', width: '6.5rem'}}
                 ></Button>
                 <Button 
                     buttonLabel={'Submit'} 
-                    inlineStyle={{height: '2rem', width: '9.5rem'}}
+                    inlineStyle={{height: '2rem', width: '8.9rem'}}
                     ></Button>
             </label>
         </form>

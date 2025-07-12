@@ -1,40 +1,37 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Table } from '../common/table/Table'
 import useFetch from '../../hooks/useFetch';
 import { Button } from '../common/button/Button';
 import { organisationEndpoints } from '../../api/Endpoints';
+import { DepartmentContext } from '../../api/DepartmentContextProvider';
 
-export const Department = ({goTo}) => {
-    const res = useFetch(organisationEndpoints.getDepartments);
-    
-    let deptData = [];
-    let theaders = [];
+export const Department = ({goTo}) => {  
+  const {departments, tableHeaders} = useContext(DepartmentContext)
 
-    if(res?.data != null){
-        deptData = res?.data;
-        theaders = Object.keys(deptData[0]);
-    }
+  const actionBtnHandler = (deptObj) => {
+    goTo("changeHOD", deptObj);
+  }
 
-    const actionBtnHandler = (deptObj) => {
-      goTo("changeHOD", deptObj);
-    }
+  const handleAddDepartment = () => {
+    goTo("addNewDept", {});
+  }
 
   return (
-    <>
-      <div className={"df-row jc-sb"}>
+    <div className='department-details'>
+      <div className={"df-row jc-sb aln-cnt"}>
         <h3>All Departments</h3>
         <Button 
-            clickHandler={(e)=>{e.preventDefault();goTo("addNewDept", {});}}
+            clickHandler={handleAddDepartment}
             buttonLabel={"Add Department"}
             inlineStyle={{padding: '5px'}}
             />
       </div>
-      <Table theaders={theaders} 
-        tbodyData={deptData} 
+      <Table theaders={tableHeaders} 
+        tbodyData={departments} 
         actionButton={true} 
         actionHandler={actionBtnHandler}
         tableFor={"deptId"}
         actionName={"Change HOD"}/>
-    </>
+    </div>
   )
 }

@@ -1,0 +1,4 @@
+.employee-details, .department-details {
+    width: fit-content;
+    justify-content: center;
+}

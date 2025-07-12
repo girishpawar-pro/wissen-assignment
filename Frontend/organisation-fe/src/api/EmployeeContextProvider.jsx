@@ -1,5 +1,7 @@
 import {createContext, useCallback, useEffect, useState} from "react";
-import { organisationEndpoints } from "./Endpoints";
+import { ignoreEmpObjKeys, organisationEndpoints } from "./Endpoints";
+import { useContext } from "react";
+import { ToastContext } from "./ToastContextProvider";
 
 export const EmployeeContext = createContext({
     employees: [],
@@ -8,6 +10,8 @@ export const EmployeeContext = createContext({
 });
 
 const EmployeeContextProvider = ({children}) => {
+    const {popToast} = useContext(ToastContext);
+
     const [employee, setEmployee] = useState({
         allEmployees: [],
         tableHeader: [],
@@ -15,11 +19,21 @@ const EmployeeContextProvider = ({children}) => {
 
     const getAllEmployees = useCallback(()=>{
         fetch(organisationEndpoints.getEmployees)
-            .then(res => res.json())
-            .then((data) => {
-                setEmployee({...employee, allEmployees: data, tableHeader: Object.keys(data[0])})
+            .then((res) => {
+                if(res.status != 500) {
+                    return res.json();
+                }
+                throw Error("Error Occurred: " + res.statusText);
             })
-            .catch(error => console.log(error));
+            .then((data) => {
+                const keys =  Object.keys(data[0]);
+                const requiredColumns = keys.filter(key => !ignoreEmpObjKeys.includes(key));
+                setEmployee({...employee, allEmployees: data, tableHeader: requiredColumns})
+            })
+            .catch((error) => {
+                console.log("Error occurred while fetching All Employees: ", error);
+                popToast({show:true, details: {severity: "error", heading: "Error", message: error.message}});
+            });
     });
 
     useEffect(()=>{
